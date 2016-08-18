@@ -1,15 +1,16 @@
 <?php
 namespace Tests\AppBundle\Command;
 
-use AppBundle\Command\CommanderAddServerCommand;
-use AppBundle\Command\CommanderDeleteServerCommand;
+use AppBundle\Command\CommanderAddRepositoryCommand;
+use AppBundle\Command\CommanderDeleteRepositoryCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use AppBundle\Lib\Server;
+use AppBundle\Lib\Repository;
 use AppBundle\Lib\FS;
 
-class CommanderAddServerCommandTest extends KernelTestCase
+class CommanderAddRepositoryCommandTest extends KernelTestCase
 {
     public function testExecute()
     {
@@ -17,44 +18,46 @@ class CommanderAddServerCommandTest extends KernelTestCase
         $kernel->boot();
 
         $application = new Application($kernel);
-        $application->add(new CommanderAddServerCommand());
+        $application->add(new CommanderAddRepositoryCommand());
         
-        $command = $application->find('add-server');
+        $command = $application->find('add-repository');
         
         $commandTester = new CommandTester($command);
         
         $helper = $command->getHelper('question');
-        $helper->setInputStream($this->getInputStream("Lorem Ipsum\n127.0.0.1\n22\nroot\nlorem\nlorem\n\n"));
+        $helper->setInputStream($this->getInputStream("./\n\n\n\n"));
         
         $commandTester->execute(array(
             'command'  => $command->getName()
         ));
         
         $output = $commandTester->getDisplay();
-        $this->assertContains('Server Added :)', $output);
+        $this->assertContains('Repository Added :)', $output);
         
-        $servers = FS::getServers("./");
-        end($servers);
-        $lastKey = key($servers);
+        $repositories = FS::getRepositories("./");
+        end($repositories);
+        $lastKey = key($repositories);
         
-        $serverArray = $servers[$lastKey];
-        $serverObject = (new Server())->fromArray($serverArray);
-        if($serverObject->getName() == "Lorem Ipsum")
+        $repositoryArray = $repositories[$lastKey];
+        $repositoryObject = (new Repository())->fromArray($repositoryArray);
+        
+        //var_dump($repositoryObject->getName());
+        if($repositoryObject->getName() == "commander\n")
         {
             $application = new Application($kernel);
-            $application->add(new CommanderDeleteServerCommand());
+            $application->add(new CommanderDeleteRepositoryCommand());
 
-            $command = $application->find('delete-server');
+            $command = $application->find('delete-repository');
 
             $commandTester = new CommandTester($command);
 
             $commandTester->execute(array(
                 'command'  => $command->getName(),
-                'serverId' => $lastKey
+                'repositoryId' => $lastKey
             ));
 
             $output = $commandTester->getDisplay();
-            $this->assertContains('Server Removed :)', $output);
+            $this->assertContains('Repository Removed :)', $output);
         }
     }
     

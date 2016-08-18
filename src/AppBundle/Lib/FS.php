@@ -32,7 +32,7 @@ class FS
             {
                 return false;
             }
-            return json_decode($serversJson);
+            return json_decode($serversJson, true);
         }
         return false;
     }
