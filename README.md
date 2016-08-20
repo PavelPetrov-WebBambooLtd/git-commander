@@ -47,4 +47,4 @@ After that the GIT-Commander is ready to use. You can type "commander" from anyw
 
 *If at some point any lost soul decides to use this tool, run phpunit, because there is moderate to high probability I've broken something at some point*
 
-*The tool is completely written in Symfony3*
+*The tool is completely written in [Symfony3](http://symfony.com/)*
