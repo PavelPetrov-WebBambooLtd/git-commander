@@ -5,7 +5,7 @@ As a developer, I use git to store my code repositories and regularly have to pu
 
 *GIT-Commander is a command line tool intended for developers using Linux*
 
-# What GIT-commander does is:
+# What GIT-commander does is
 Allows you to add all servers you have git repositories to. You enter the server name, port, user, password and secret, the secret is then used to encode the password with AES-256-CBC. Remember your secret! You will be asked for it anytime you push changes to the server.
 
 Add local git repositories, and configure the remote folders you want them pushed to(you can also specify branch)
