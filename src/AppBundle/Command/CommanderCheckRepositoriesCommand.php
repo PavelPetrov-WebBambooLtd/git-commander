@@ -100,7 +100,7 @@ class CommanderCheckRepositoriesCommand extends ContainerAwareCommand
                 else
                 {
                     //pull
-                    $io->warning('Not Implemented: Pull');
+                    dump(shell_exec($this->getCommand($serverObject, $secret, "cd {$remoteFolder}; git pull;")));
                 }
             }
             else
