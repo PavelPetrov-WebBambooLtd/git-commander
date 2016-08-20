@@ -45,4 +45,4 @@ After that the GIT-Commander is ready to use. You can type "commander" from anyw
 * `commander check-repositories <ID>` - eg. "commander check-repositories 0" - Logs in to all servers you've specified and checks if the remote folders are in sync with the current repository. It takes into account the branch you've selected.
 * `commander check-repositories <ID> --commonSecret=true` - Same as above but if you've used the same secret to all of your servers you can specify this option to only type the secret once, instead of on demand for each server.
 
-* If at some point any lost soul decides to use this tool, run phpunit, because there is moderate to high probability I've broken something at some point *
+*If at some point any lost soul decides to use this tool, run phpunit, because there is moderate to high probability I've broken something at some point*
