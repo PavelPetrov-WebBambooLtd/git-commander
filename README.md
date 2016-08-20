@@ -13,6 +13,11 @@ Add local git repositories, and configure the remote folders you want them pushe
 Check if all/any remote folders using a repository need updating and run a git pull on them.
 
 # How to use
+GIT-Commander uses sshpass(required) and knock(optional - if you need to update servers with port knocking)
+So you should install sshpass by (Valid for Debian, Ubuntu, Linux Mint):
+```bash
+sudo apt-get install sshpass
+```
 
 After cloning the repository you have to run: 
 ```bash
@@ -40,4 +45,4 @@ After that the GIT-Commander is ready to use. You can type "commander" from anyw
 * `commander check-repositories <ID>` - eg. "commander check-repositories 0" - Logs in to all servers you've specified and checks if the remote folders are in sync with the current repository. It takes into account the branch you've selected.
 * `commander check-repositories <ID> --commonSecret=true` - Same as above but if you've used the same secret to all of your servers you can specify this option to only type the secret once, instead of on demand for each server.
 
-
+* If at some point any lost soul decides to use this tool, run phpunit, because there is moderate to high probability I've broken something at some point *
