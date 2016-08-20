@@ -46,3 +46,5 @@ After that the GIT-Commander is ready to use. You can type "commander" from anyw
 * `commander check-repositories <ID> --commonSecret=true` - Same as above but if you've used the same secret to all of your servers you can specify this option to only type the secret once, instead of on demand for each server.
 
 *If at some point any lost soul decides to use this tool, run phpunit, because there is moderate to high probability I've broken something at some point*
+
+*The tool is completely written in Symfony3*
