@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Lib;
 
 interface ServerInterface
@@ -11,8 +12,8 @@ interface ServerInterface
     public function getPort();
     public function setUser($user);
     public function getUser();
-    public function setPassword($password, $secret, $method="AES-256-CBC");
-    public function getPassword($secret, $method="AES-256-CBC");
+    public function setPassword($password, $secret, $method = 'AES-256-CBC');
+    public function getPassword($secret, $method = 'AES-256-CBC');
     public function setKnockingSequence($knockingString);
     public function getKnockingSequence();
     public function toArray();

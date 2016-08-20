@@ -1,5 +1,6 @@
 <?php
-namespace Tests\AppBundle\Command;
+
+namespace tests\AppBundle\Command;
 
 use AppBundle\Command\CommanderAddServerCommand;
 use AppBundle\Command\CommanderDeleteServerCommand;
@@ -18,29 +19,28 @@ class CommanderAddServerCommandTest extends KernelTestCase
 
         $application = new Application($kernel);
         $application->add(new CommanderAddServerCommand());
-        
+
         $command = $application->find('add-server');
-        
+
         $commandTester = new CommandTester($command);
-        
+
         $helper = $command->getHelper('question');
         $helper->setInputStream($this->getInputStream("Lorem Ipsum\n127.0.0.1\n22\nroot\nlorem\nlorem\n\n"));
-        
+
         $commandTester->execute(array(
-            'command'  => $command->getName()
+            'command' => $command->getName(),
         ));
-        
+
         $output = $commandTester->getDisplay();
         $this->assertContains('Server Added :)', $output);
-        
-        $servers = FS::getServers("./");
+
+        $servers = FS::getServers('./');
         end($servers);
         $lastKey = key($servers);
-        
+
         $serverArray = $servers[$lastKey];
         $serverObject = (new Server())->fromArray($serverArray);
-        if($serverObject->getName() == "Lorem Ipsum")
-        {
+        if ($serverObject->getName() == 'Lorem Ipsum') {
             $application = new Application($kernel);
             $application->add(new CommanderDeleteServerCommand());
 
@@ -49,15 +49,15 @@ class CommanderAddServerCommandTest extends KernelTestCase
             $commandTester = new CommandTester($command);
 
             $commandTester->execute(array(
-                'command'  => $command->getName(),
-                'serverId' => $lastKey
+                'command' => $command->getName(),
+                'serverId' => $lastKey,
             ));
 
             $output = $commandTester->getDisplay();
             $this->assertContains('Server Removed :)', $output);
         }
     }
-    
+
     protected function getInputStream($input)
     {
         $stream = fopen('php://memory', 'r+', false);

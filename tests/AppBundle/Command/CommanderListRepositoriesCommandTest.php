@@ -1,5 +1,6 @@
 <?php
-namespace Tests\AppBundle\Command;
+
+namespace tests\AppBundle\Command;
 
 use AppBundle\Command\CommanderListRepositoriesCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -16,21 +17,18 @@ class CommanderListRepositoriesCommandTest extends KernelTestCase
 
         $application = new Application($kernel);
         $application->add(new CommanderListRepositoriesCommand());
-        
+
         $command = $application->find('list-repositories');
-        
+
         $commandTester = new CommandTester($command);
-        
+
         $commandTester->execute(array(
-            'command'  => $command->getName()
+            'command' => $command->getName(),
         ));
         $output = $commandTester->getDisplay();
-        if(FS::getRepositories("./"))
-        {
+        if (FS::getRepositories('./')) {
             $this->assertContains('Repository Name', $output);
-        }
-        else
-        {
+        } else {
             $this->assertContains('No Repositories Yet :(', $output);
         }
     }

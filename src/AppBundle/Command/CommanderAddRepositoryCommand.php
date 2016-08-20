@@ -3,9 +3,7 @@
 namespace AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -17,7 +15,7 @@ use AppBundle\Lib\FS;
 class CommanderAddRepositoryCommand extends ContainerAwareCommand
 {
     private $rootDir;
-    
+
     protected function configure()
     {
         $this
@@ -31,7 +29,7 @@ class CommanderAddRepositoryCommand extends ContainerAwareCommand
     {
         $io = new SymfonyStyle($input, $output);
         $this->rootDir = $this->getContainer()->get('kernel')->getRootDir().'/../';
-        
+
         $helper = $this->getHelper('question');
         //Set Repository Folder
         $questionRepositoryFolder = new Question('Please enter the path to the repository: ');
@@ -41,6 +39,7 @@ class CommanderAddRepositoryCommand extends ContainerAwareCommand
                     'The path to the repository cannot be empty'
                 );
             }
+
             return $answer;
         });
         $questionRepositoryFolder->setMaxAttempts(2);
@@ -49,24 +48,19 @@ class CommanderAddRepositoryCommand extends ContainerAwareCommand
         //Server Names
         $serverNames = array();
         $servers = FS::getServers($this->rootDir);
-        foreach($servers as $key => $server)
-        {
+        foreach ($servers as $key => $server) {
             $serverObject = (new Server())->fromArray($server);
             $serverNames[$serverObject->getName()] = $key;
         }
-        
+
         $remotes = array();
         $loop = true;
         $id = 1;
-        
-        while($loop)
-        {
-            if(empty($serverNames))
-            {
+
+        while ($loop) {
+            if (empty($serverNames)) {
                 $loop = false;
-            }
-            else
-            {
+            } else {
                 //Select Servere
                 $questionServer = new ChoiceQuestion(
                     'Please select remote server',
@@ -81,53 +75,43 @@ class CommanderAddRepositoryCommand extends ContainerAwareCommand
 
                 $questionRemoteFolder->setMaxAttempts(2);
                 $remoteFolder = $helper->ask($input, $output, $questionRemoteFolder);
-                
+
                 //Set Branch
                 $questionBranch = new Question('Please enter the branch name: ', 'master');
 
                 $questionBranch->setMaxAttempts(2);
                 $remoteBranch = $helper->ask($input, $output, $questionBranch);
-                
-                if(!$serverName || !$remoteFolder)
-                {
+
+                if (!$serverName || !$remoteFolder) {
                     $loop = false;
-                }
-                else
-                {
+                } else {
                     $sId = $serverNames[$serverName];
                     $remotes[] = array($servers[$sId], $remoteFolder, $remoteBranch);
                 }
-                $id++;
+                ++$id;
             }
-            
         }
         $name = shell_exec("cd $localFolder;basename `git rev-parse --show-toplevel`");
         $repository = new Repository();
         $repository->setLocalFolder($localFolder);
         $repository->setName($name);
-        
-        foreach($remotes as $remote)
-        {
+
+        foreach ($remotes as $remote) {
             list($serverArray, $remoteFolder, $remoteBranch) = $remote;
             $serverObject = (new Server())->fromArray($serverArray);
             $repository->addRemote($serverObject, $remoteFolder, $remoteBranch);
         }
-        
+
         $currentRepositories = FS::getRepositories($this->rootDir);
-        if(!$currentRepositories)
-        {
+        if (!$currentRepositories) {
             $currentRepositories = array();
         }
-        
+
         $currentRepositories[] = $repository->toArray();
-        if(FS::updateRepositories($this->rootDir, $currentRepositories))
-        {
+        if (FS::updateRepositories($this->rootDir, $currentRepositories)) {
             $io->success('Repository Added :)');
-        }
-        else
-        {
+        } else {
             $io->warning('Something Failed! :(');
         }
     }
-
 }

@@ -12,7 +12,7 @@ use AppBundle\Lib\FS;
 class CommanderDeleteServerCommand extends ContainerAwareCommand
 {
     private $rootDir;
-    
+
     protected function configure()
     {
         $this
@@ -28,19 +28,15 @@ class CommanderDeleteServerCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $this->rootDir = $this->getContainer()->get('kernel')->getRootDir().'/../';
         $servers = FS::getServers($this->rootDir);
-        
+
         unset($servers[$input->getArgument('serverId')]);
         //Update repositorie
-        
+
         //
-        if(FS::updateServers($this->rootDir, $servers))
-        {
+        if (FS::updateServers($this->rootDir, $servers)) {
             $io->success('Server Removed :)');
-        }
-        else
-        {
+        } else {
             $io->warning('Something Failed! :(');
         }
     }
-
 }

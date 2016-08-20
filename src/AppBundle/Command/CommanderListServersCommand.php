@@ -13,7 +13,7 @@ use AppBundle\Lib\FS;
 class CommanderListServersCommand extends ContainerAwareCommand
 {
     private $rootDir;
-    
+
     protected function configure()
     {
         $this
@@ -29,14 +29,11 @@ class CommanderListServersCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $this->rootDir = $this->getContainer()->get('kernel')->getRootDir().'/../';
         $servers = FS::getServers($this->rootDir);
-        
-        if($servers)
-        {
-            if(is_null($input->getArgument('sId')))
-            {
+
+        if ($servers) {
+            if (is_null($input->getArgument('sId'))) {
                 $tableResult = array();
-                foreach($servers as $key => $server)
-                {
+                foreach ($servers as $key => $server) {
                     $serverObject = (new Server())->fromArray($server);
                     $tableResult[] = array($key, $serverObject->getName());
                 }
@@ -44,10 +41,8 @@ class CommanderListServersCommand extends ContainerAwareCommand
                     array('ID', 'Server Name'),
                     $tableResult
                 );
-            }
-            else
-            {
-                $serverArray = $servers[(int)$input->getArgument('sId')];
+            } else {
+                $serverArray = $servers[(int) $input->getArgument('sId')];
                 $serverObject = (new Server())->fromArray($serverArray);
                 $io->table(
                     array('Key', 'Value'),
@@ -55,18 +50,15 @@ class CommanderListServersCommand extends ContainerAwareCommand
                         array('Name', $serverObject->getName()),
                         array('Port', $serverObject->getPort()),
                         array('User', $serverObject->getUser()),
-                        array('Knocking Sequence', is_array($serverObject->getKnockingSequence()) ? implode(",", $serverObject->getKnockingSequence()) : false)
+                        array('Knocking Sequence', is_array($serverObject->getKnockingSequence()) ? implode(',', $serverObject->getKnockingSequence()) : false),
                     )
                 );
             }
-        }
-        else
-        {
+        } else {
             $output->writeln([
                 'No Servers Yet :(',
-                '================'
+                '================',
             ]);
         }
     }
-
 }

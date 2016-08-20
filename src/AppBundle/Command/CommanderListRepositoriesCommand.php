@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Lib\FS;
 use AppBundle\Lib\Repository;
@@ -15,7 +14,7 @@ use AppBundle\Lib\Server;
 class CommanderListRepositoriesCommand extends ContainerAwareCommand
 {
     private $rootDir;
-    
+
     protected function configure()
     {
         $this
@@ -31,13 +30,10 @@ class CommanderListRepositoriesCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $this->rootDir = $this->getContainer()->get('kernel')->getRootDir().'/../';
         $repositories = FS::getRepositories($this->rootDir);
-        if($repositories)
-        {
-            if(is_null($input->getArgument('rId')))
-            {
+        if ($repositories) {
+            if (is_null($input->getArgument('rId'))) {
                 $tableResult = array();
-                foreach($repositories as $key => $repository)
-                {
+                foreach ($repositories as $key => $repository) {
                     $repositoryObject = (new Repository())->fromArray($repository);
                     $tableResult[] = array($key, $repositoryObject->getName());
                 }
@@ -45,36 +41,31 @@ class CommanderListRepositoriesCommand extends ContainerAwareCommand
                     array('ID', 'Repository Name'),
                     $tableResult
                 );
-            }
-            else {
-                $repositoryArray = $repositories[(int)$input->getArgument('rId')];
+            } else {
+                $repositoryArray = $repositories[(int) $input->getArgument('rId')];
                 $repositoryObject = (new Repository())->fromArray($repositoryArray);
                 $tableResult = array(
                     array('Name', $repositoryObject->getName()),
-                    array('Local Folder', $repositoryObject->getLocalFolder())
+                    array('Local Folder', $repositoryObject->getLocalFolder()),
                 );
                 $id = 1;
-                foreach($repositoryObject->getRemotes() as $remote)
-                {
+                foreach ($repositoryObject->getRemotes() as $remote) {
                     list($serverArray, $remoteFolder) = $remote;
                     $serverObject = (new Server())->fromArray($serverArray);
                     $tableResult[] = array("$id. Server Name", $serverObject->getName());
                     $tableResult[] = array("$id. Remote Folder", $remoteFolder);
-                    $id++;
+                    ++$id;
                 }
                 $io->table(
                     array('Key', 'Value'),
                     $tableResult
                 );
             }
-        }
-        else
-        {
+        } else {
             $output->writeln([
                 'No Repositories Yet :(',
-                '======================'
+                '======================',
             ]);
         }
     }
-
 }

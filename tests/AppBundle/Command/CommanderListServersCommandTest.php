@@ -1,5 +1,6 @@
 <?php
-namespace Tests\AppBundle\Command;
+
+namespace tests\AppBundle\Command;
 
 use AppBundle\Command\CommanderListServersCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -16,21 +17,18 @@ class CommanderListServersCommandTest extends KernelTestCase
 
         $application = new Application($kernel);
         $application->add(new CommanderListServersCommand());
-        
+
         $command = $application->find('list-servers');
-        
+
         $commandTester = new CommandTester($command);
-        
+
         $commandTester->execute(array(
-            'command'  => $command->getName()
+            'command' => $command->getName(),
         ));
         $output = $commandTester->getDisplay();
-        if(FS::getServers("./"))
-        {
+        if (FS::getServers('./')) {
             $this->assertContains('Server Name', $output);
-        }
-        else
-        {
+        } else {
             $this->assertContains('No Servers Yet :(', $output);
         }
     }

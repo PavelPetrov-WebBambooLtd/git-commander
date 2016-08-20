@@ -4,9 +4,7 @@ namespace AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CommanderHelperCommand extends ContainerAwareCommand
@@ -31,8 +29,7 @@ class CommanderHelperCommand extends ContainerAwareCommand
             'list-repositories',
             'add-repository',
             'delete-repository',
-            'check-repositories'
+            'check-repositories',
         ));
     }
-
 }

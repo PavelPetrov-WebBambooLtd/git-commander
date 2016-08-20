@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Lib\FS;
 
@@ -27,19 +26,15 @@ class CommanderDeleteRepositoryCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input, $output);
         $this->rootDir = $this->getContainer()->get('kernel')->getRootDir().'/../';
         $repositories = FS::getRepositories($this->rootDir);
-        
+
         unset($repositories[$input->getArgument('repositoryId')]);
         //Update repositorie
-        
+
         //
-        if(FS::updateRepositories($this->rootDir, $repositories))
-        {
+        if (FS::updateRepositories($this->rootDir, $repositories)) {
             $io->success('Repository Removed :)');
-        }
-        else
-        {
+        } else {
             $io->warning('Something Failed! :(');
         }
     }
-
 }

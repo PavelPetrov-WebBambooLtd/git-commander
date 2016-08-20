@@ -1,7 +1,6 @@
 <?php
-namespace AppBundle\Lib;
 
-use AppBundle\Lib\ServerInterface;
+namespace AppBundle\Lib;
 
 interface RepositoryInterface
 {

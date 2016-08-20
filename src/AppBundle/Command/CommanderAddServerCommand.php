@@ -13,7 +13,7 @@ use AppBundle\Lib\FS;
 class CommanderAddServerCommand extends ContainerAwareCommand
 {
     private $rootDir;
-    
+
     protected function configure()
     {
         $this
@@ -27,7 +27,7 @@ class CommanderAddServerCommand extends ContainerAwareCommand
     {
         $io = new SymfonyStyle($input, $output);
         $this->rootDir = $this->getContainer()->get('kernel')->getRootDir().'/../';
-        
+
         $helper = $this->getHelper('question');
         //Server name
         $questionServerName = new Question('Please enter the name of the server: ');
@@ -37,6 +37,7 @@ class CommanderAddServerCommand extends ContainerAwareCommand
                     'The name of the server cannot be empty'
                 );
             }
+
             return $answer;
         });
         $questionServerName->setMaxAttempts(2);
@@ -49,6 +50,7 @@ class CommanderAddServerCommand extends ContainerAwareCommand
                     'The server address cannot be empty'
                 );
             }
+
             return $answer;
         });
         $questionServerAddress->setMaxAttempts(2);
@@ -61,6 +63,7 @@ class CommanderAddServerCommand extends ContainerAwareCommand
                     'The SSH port must be a number'
                 );
             }
+
             return $answer;
         });
         $questionSSHPort->setMaxAttempts(2);
@@ -73,6 +76,7 @@ class CommanderAddServerCommand extends ContainerAwareCommand
                     'The SSH user can`t be empty'
                 );
             }
+
             return $answer;
         });
         $questionSSHUser->setMaxAttempts(2);
@@ -105,7 +109,7 @@ class CommanderAddServerCommand extends ContainerAwareCommand
         $questionKnockingSequence = new Question('Please enter the knocking sequence, separated with comma. Eg. "6123,4567,1235": ', false);
         $questionKnockingSequence->setMaxAttempts(2);
         $knockingSequence = $helper->ask($input, $output, $questionKnockingSequence);
-        
+
         $server = new Server();
         $server->setName($serverName)
                 ->setAddress($serverAddress)
@@ -113,22 +117,17 @@ class CommanderAddServerCommand extends ContainerAwareCommand
                 ->setUser($sshUser)
                 ->setPassword($sshPassword, $secret)
                 ->setKnockingSequence($knockingSequence);
-        
+
         $currentServers = FS::getServers($this->rootDir);
-        if(!$currentServers)
-        {
+        if (!$currentServers) {
             $currentServers = array();
         }
         dump($server->toArray());
         $currentServers[] = $server->toArray();
-        if(FS::updateServers($this->rootDir, $currentServers))
-        {
+        if (FS::updateServers($this->rootDir, $currentServers)) {
             $io->success('Server Added :)');
-        }
-        else
-        {
+        } else {
             $io->warning('Something Failed! :(');
         }
     }
-
 }
